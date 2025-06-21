@@ -192,3 +192,10 @@ cython_debug/
 #  refer to https://docs.cursor.com/context/ignore-files
 .cursorignore
 .cursorindexingignore
+
+# Images
+#   Too many assets are generated. For integrity preservation, videos and frames must be ignored
+*.png
+*.mp4
+*.zip
+!original.zip
