@@ -9,7 +9,8 @@ _Actualizar en cada avance que se tenga_
 ## Preparación
 El repositorio ya se encuentra dividido en las carpetas necesarias para que los scripts funcionen (aunque, dependiendo del intérprete que usen, las cadenas de caracteres que representan la ruta relativa de los archivos originales y las carpetas puedan variar). En cualquier caso, recomiendo que trabajen desde el directorio raíz del proyecto que, en el prompt del CMD, se debe ver algo así: `C:\Ruta\hacia\el\proyecto\Proyecto Final>`.
 
-> [WARNING!] Debido a que el archivo supera los 100GB que puede manejar Git, es necesario la extensión Git for Large Files Storage, esto se hace desde el CMD con el comando: `git lfs install`. Se debe ejecutar en cuando se conecten al repositorio y antes de ejecutar "pull" a la rama _main_.
+> [!WARNING]
+> Debido a que el archivo supera los 100GB que puede manejar Git, es necesario la extensión Git for Large Files Storage, esto se hace desde el CMD con el comando: `git lfs install`. Se debe ejecutar en cuando se conecten al repositorio y antes de ejecutar "pull" a la rama _main_.
 
 Para asegurar la replicación del proyecto, sugiero seguir los siguientes pasos:
 1. Crear un entorno virtual desde la raíz del proyecto ejcutando: `python -m venv nombre_del_entorno`, donde *nombre_del_entorno* es el nombre que se le desee dar. El nombre *.venv* se sugiere por defecto.
