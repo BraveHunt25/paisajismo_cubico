@@ -1,7 +1,7 @@
 # Proyecto Final de Visión Artificial
 - Hernández Jiménez Erick Yael
 - Mazariegos Aguilar Julio Darikson
-- _Falta el nombre de Oslo acá_
+- Chávez Torreblanca Angel Alexis
 
 **Última modificación: 21/06/2025 11:47 AM**
 _Actualizar en cada avance que se tenga_
