@@ -29,7 +29,7 @@ FRAME_INPUT_ROOT = './src/assets/frames'
 FRAME_OUTPUT_ROOT = './src/frames_muestra'
 
 # Intervalo en segundos para seleccionar un frame (ejemplo: cada 5 segundos)
-INTERVAL_SECONDS = 5
+INTERVAL_SECONDS = 30
 
 # Crear carpeta de salida si no existe
 os.makedirs(FRAME_OUTPUT_ROOT, exist_ok=True)

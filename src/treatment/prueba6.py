@@ -10,16 +10,13 @@ Con base en las descripciones ingresadas, el script compara el texto con una bas
 predice a qué bioma corresponde cada parche y finalmente determina el bioma más probable del frame.
 También reproduce el resultado hablado usando síntesis de voz.
 
-Uso:
-Para interactuar con imágenes segmentadas en clusters y predecir biomas de forma semi-automatizada.
-
 Dependencias:
 - OpenCV (cv2)
 - NumPy
 - Matplotlib
 - scikit-learn (KMeans, TfidfVectorizer, cosine_similarity)
-- pyttsx3 (síntesis de voz)
-- json, os, random (módulos estándar)
+- pyttsx3
+- json, os, random
 """
 
 import os
@@ -33,90 +30,118 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import pyttsx3
 
-# --- CONFIGURACIONES ---
-FRAME_INPUT_ROOT = './src/assets/frames'          # Carpeta raíz con frames de biomas
-JSON_DESCRIPCIONES = './src/etiquetas_agrupadas.json'  # Archivo JSON con descripciones etiquetadas y agrupadas
-TAM_PARCHE = 50                                   # Tamaño del parche cuadrado para mostrar
-K = 3                                             # Número de clusters para K-Means
+# --- CONFIGURACIÓN ---
+FRAME_INPUT_ROOT = './src/assets/frames'
+JSON_DESCRIPCIONES = './src/etiquetas_agrupadas.json'
+TAM_PARCHE = 100
+K = 3  # Clusters K-means
 
 # --- SELECCIONAR FRAME ALEATORIO ---
-biomas = os.listdir(FRAME_INPUT_ROOT)             # Listar carpetas de biomas
-bioma_random = random.choice(biomas)               # Escoger un bioma al azar
+biomas = os.listdir(FRAME_INPUT_ROOT)
+bioma_random = random.choice(biomas)
 carpeta = os.path.join(FRAME_INPUT_ROOT, bioma_random)
-frame_random = random.choice([f for f in os.listdir(carpeta) if f.endswith('.png')])  # Escoger frame aleatorio
+frame_random = random.choice([f for f in os.listdir(carpeta) if f.endswith('.png')])
 img_path = os.path.join(carpeta, frame_random)
 
-# Leer imagen
+# --- LEER IMAGEN ---
 img = cv2.imread(img_path)
 if img is None:
     print("Error al cargar imagen")
     exit()
 
-# Preparar datos para clustering
+# --- MOSTRAR IMAGEN COMPLETA ---
+plt.figure(figsize=(8, 6))
+plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+plt.axis('off')
+plt.title("Imagen completa del frame seleccionado")
+plt.show()
+
+# --- K-MEANS ---
 h, w, _ = img.shape
 pixels = img.reshape((-1, 3))
-
-# Aplicar K-Means para segmentar la imagen en K clusters
 kmeans = KMeans(n_clusters=K, random_state=42)
 kmeans.fit(pixels)
 labels = kmeans.labels_.reshape(h, w)
+
+# --- VISUALIZAR ZONAS SEGMENTADAS POR K-MEANS ---
+colores = (np.random.rand(K, 3) * 255).astype(np.uint8)  # Colores aleatorios para cada cluster
+img_segmentada = colores[labels]  # Asignar color a cada pixel según su cluster
+
+plt.figure(figsize=(8, 6))
+plt.imshow(img_segmentada)
+plt.axis('off')
+plt.title("Zonas identificadas por K-Means")
+plt.show()
 
 # --- CARGAR BASE DE DESCRIPCIONES ---
 with open(JSON_DESCRIPCIONES, 'r') as f:
     base = json.load(f)
 
-# Extraer descripciones y asociarlas con biomas (a partir del nombre del frame)
 descripciones = [e['descripcion'] for e in base]
-biomas_asociados = [e['frame'].split('_')[0] for e in base]
+biomas_asociados = ['_'.join(e['frame'].split('_')[:2]) for e in base]
 
-# Vectorizar todas las descripciones de la base para comparación posterior
+# --- VECTORIZAR BASE DE TEXTO ---
 vectorizer = TfidfVectorizer()
 X = vectorizer.fit_transform(descripciones)
 
-conteo_biomas = {}  # Diccionario para contar predicciones de bioma
+conteo_biomas = {}
 
-# --- PREDICCIÓN POR CADA CLUSTER ---
+# --- PREDICCIÓN POR CLUSTER ---
 for i in range(K):
-    ys, xs = np.where(labels == i)  # Coordenadas de píxeles que pertenecen al cluster i
+    ys, xs = np.where(labels == i)
     if len(xs) == 0:
         continue
-    
-    idx = np.random.randint(len(xs))  # Elegir un píxel aleatorio dentro del cluster
-    x, y = xs[idx], ys[idx]
-    x, y = max(0, x - TAM_PARCHE//2), max(0, y - TAM_PARCHE//2)  # Ajustar para obtener parche centrado
-    
-    parche = img[y:y+TAM_PARCHE, x:x+TAM_PARCHE]
-    if parche.shape[0] != TAM_PARCHE or parche.shape[1] != TAM_PARCHE:
+
+    intentos = 0
+    parche = None
+
+    while intentos < 10:
+        idx = np.random.randint(len(xs))
+        x, y = xs[idx], ys[idx]
+        x, y = max(0, x - TAM_PARCHE // 2), max(0, y - TAM_PARCHE // 2)
+        parche = img[y:y + TAM_PARCHE, x:x + TAM_PARCHE]
+        if parche.shape[0] == TAM_PARCHE and parche.shape[1] == TAM_PARCHE:
+            break
+        intentos += 1
+
+    if parche is None or parche.shape[0] != TAM_PARCHE or parche.shape[1] != TAM_PARCHE:
         continue
 
-    # Mostrar parche al usuario para que lo describa
     plt.imshow(cv2.cvtColor(parche, cv2.COLOR_BGR2RGB))
     plt.axis('off')
-    plt.title(f'Cluster {i}')
+    plt.title(f'Parche del Cluster {i}')
     plt.show()
 
     descripcion = input("Describe el parche mostrado: ")
 
-    # Vectorizar la descripción ingresada y calcular similitud con la base
     input_vec = vectorizer.transform([descripcion])
     similitudes = cosine_similarity(input_vec, X).flatten()
-
-    # Encontrar el índice de la descripción más similar
     top_idx = np.argmax(similitudes)
     bioma_predicho = biomas_asociados[top_idx]
 
-    # Contar cuántas veces se predice cada bioma
     conteo_biomas[bioma_predicho] = conteo_biomas.get(bioma_predicho, 0) + 1
 
 # --- DECISIÓN FINAL ---
 if conteo_biomas:
-    # Seleccionar el bioma con más votos
     pred_bioma = max(conteo_biomas, key=conteo_biomas.get)
     print(f"\n🔍 Bioma predicho: {pred_bioma}")
 
-    # --- HABLAR ---
+    # --- FORMATEAR NOMBRE DE BIOMA PARA VOZ ---
+    def formatear_bioma(nombre):
+        mapa = {
+            'bosque_abedul': 'Bosque de abedules',
+            'bosque_cerezo': 'Bosque de cerezos',
+            'bosque_helado': 'Bosque helado',
+            'bosque_palido': 'Bosque pálido',
+            'jungla': 'Jungla'
+        }
+        return mapa.get(nombre, nombre.replace('_', ' ').capitalize())
+
+    texto_bioma = formatear_bioma(pred_bioma)
+    print(f"🗣️ Descripción hablada: {texto_bioma}")
+
     engine = pyttsx3.init()
-    engine.say(f"Este bioma es probablemente {pred_bioma}")
+    engine.say(f"Este bioma es probablemente {texto_bioma}")
     engine.runAndWait()
 else:
     print("No se pudo predecir el bioma.")

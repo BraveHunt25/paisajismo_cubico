@@ -1,26 +1,3 @@
-"""
-etiquetar_parches_clusters.py
-
-Descripción:
-Este script procesa una carpeta de imágenes (frames) y para cada imagen:
-- Aplica K-Means para segmentar la imagen en K clusters de colores.
-- Para cada cluster, selecciona aleatoriamente un parche cuadrado de tamaño TAM_PARCHE.
-- Muestra el parche al usuario y solicita que describa lo que ve (texto).
-- Guarda la descripción junto con datos del parche y cluster en un JSON.
-
-Uso:
-Se utiliza para crear una base de datos anotada con descripciones humanas sobre
-regiones representativas (clusters) de cada frame, útil para entrenamiento o análisis posterior.
-
-Dependencias:
-- OpenCV (cv2)
-- NumPy
-- Matplotlib
-- scikit-learn
-- json (módulo estándar)
-- os (módulo estándar)
-"""
-
 import os
 import cv2
 import numpy as np
@@ -35,7 +12,7 @@ IMAGES_DIR = './src/frames_muestra'
 RESULTADOS_PATH = './src/etiquetas_clusters_usuario.json'
 
 # Tamaño del parche cuadrado que se extraerá de cada cluster (en pixeles)
-TAM_PARCHE = 50
+TAM_PARCHE = 100
 
 # Número de clusters para segmentar la imagen con K-Means
 K = 3
@@ -95,12 +72,12 @@ for idx, archivo in enumerate(archivos):
         # Solicitar al usuario que describa el parche
         descripcion = input("Describe el parche mostrado: ")
         
-        # Guardar la descripción junto con información del parche y cluster
+        # Guardar la descripción junto con información del parche y cluster (convertido a int)
         resultados.append({
             'frame': archivo,
-            'x': x,
-            'y': y,
-            'cluster': i,
+            'x': int(x),
+            'y': int(y),
+            'cluster': int(i),
             'descripcion': descripcion
         })
 
