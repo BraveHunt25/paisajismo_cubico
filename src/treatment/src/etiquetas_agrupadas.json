@@ -1,0 +1,122 @@
+[
+  {
+    "frame": "bosque_abedul_frame_07200_t127.689.png",
+    "x": 402,
+    "y": 178,
+    "cluster": 0,
+    "descripcion": "césped",
+    "grupo": 6
+  },
+  {
+    "frame": "bosque_abedul_frame_07200_t127.689.png",
+    "x": 192,
+    "y": 212,
+    "cluster": 1,
+    "descripcion": "hojas verdes",
+    "grupo": 4
+  },
+  {
+    "frame": "bosque_abedul_frame_07200_t127.689.png",
+    "x": 312,
+    "y": 64,
+    "cluster": 2,
+    "descripcion": "tronco café claro",
+    "grupo": 9
+  },
+  {
+    "frame": "bosque_cerezo_frame_07200_t125.314.png",
+    "x": 123,
+    "y": 98,
+    "cluster": 0,
+    "descripcion": "hojas rosas",
+    "grupo": 1
+  },
+  {
+    "frame": "bosque_cerezo_frame_07200_t125.314.png",
+    "x": 412,
+    "y": 243,
+    "cluster": 1,
+    "descripcion": "césped con flores",
+    "grupo": 6
+  },
+  {
+    "frame": "bosque_cerezo_frame_07200_t125.314.png",
+    "x": 578,
+    "y": 156,
+    "cluster": 2,
+    "descripcion": "tronco rosado",
+    "grupo": 1
+  },
+  {
+    "frame": "bosque_helado_frame_07200_t129.480.png",
+    "x": 45,
+    "y": 38,
+    "cluster": 0,
+    "descripcion": "nieve",
+    "grupo": 0
+  },
+  {
+    "frame": "bosque_helado_frame_07200_t129.480.png",
+    "x": 218,
+    "y": 184,
+    "cluster": 1,
+    "descripcion": "hielo",
+    "grupo": 8
+  },
+  {
+    "frame": "bosque_helado_frame_07200_t129.480.png",
+    "x": 640,
+    "y": 91,
+    "cluster": 2,
+    "descripcion": "montaña nevada",
+    "grupo": 3
+  },
+  {
+    "frame": "bosque_palido_frame_07200_t123.945.png",
+    "x": 376,
+    "y": 176,
+    "cluster": 0,
+    "descripcion": "pasto gris",
+    "grupo": 2
+  },
+  {
+    "frame": "bosque_palido_frame_07200_t123.945.png",
+    "x": 282,
+    "y": 94,
+    "cluster": 1,
+    "descripcion": "tronco gris",
+    "grupo": 2
+  },
+  {
+    "frame": "bosque_palido_frame_07200_t123.945.png",
+    "x": 119,
+    "y": 0,
+    "cluster": 2,
+    "descripcion": "cielo gris",
+    "grupo": 3
+  },
+  {
+    "frame": "jungla_frame_07200_t123.000.png",
+    "x": 321,
+    "y": 155,
+    "cluster": 0,
+    "descripcion": "hojas verde brillante",
+    "grupo": 8
+  },
+  {
+    "frame": "jungla_frame_07200_t123.000.png",
+    "x": 470,
+    "y": 108,
+    "cluster": 1,
+    "descripcion": "tronco rayado",
+    "grupo": 9
+  },
+  {
+    "frame": "jungla_frame_07200_t123.000.png",
+    "x": 88,
+    "y": 23,
+    "cluster": 2,
+    "descripcion": "lianas",
+    "grupo": 5
+  }
+]
